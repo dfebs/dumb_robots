@@ -4,4 +4,4 @@
 
 - Added shell.nix for build configuration because I run on nixos
 - Made intial Tile struct and TileType.
-- Made a bare bone world generator (just random tiles with probabilities)
+- Made a bare-bones world generator (just random tiles with probabilities)
