@@ -1,5 +1,9 @@
 # Change Log
 
+### 2023-08-18
+- Added ability to remove workers that want to leave the group using `remove_quitters`. This will take the quitters out of the group, and return them as a vec
+- Added some unit tests for `remove_quitters`
+
 ### 2023-08-13
 
 - Created base structs for Worker and WorkerGroup
