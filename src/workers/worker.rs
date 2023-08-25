@@ -73,3 +73,87 @@ impl Default for Worker {
         }
     }
 }
+
+#[cfg(test)]
+mod tests { // TODO: Make tests better and add assertions. Also, probably will want to move these somewhere else at some point
+
+
+    use crate::workers::worker_group::WorkerGroup;
+    use super::*;
+
+    #[test]
+    fn create_new_worker_group() {
+        let worker_group = WorkerGroup::new();
+        println!("{:#?}", worker_group)
+    }
+
+    #[test]
+    fn create_worker_group_from_workers() {
+        let workers = vec![Worker::new(), Worker::new(), Worker::new()];
+        let leader = Worker::new();
+        let worker_group = WorkerGroup::from_workers(leader, workers);
+        println!("{:#?}", worker_group)
+    }
+
+    #[test]
+    fn remove_quitters() {
+        let workers = vec![
+            Worker::from_state(ActiveState::QuittingGroup, vec![PassiveState::Happy]), 
+            Worker::from_state(ActiveState::Active, vec![PassiveState::Angry]), 
+            Worker::from_state(ActiveState::QuittingGroup, vec![PassiveState::Happy, PassiveState::Sick(Disease::Worm)]),
+            Worker::from_state(ActiveState::Annoying, vec![PassiveState::Sick(Disease::Cold)]),
+            Worker::from_state(ActiveState::Resting, vec![PassiveState::Sick(Disease::Cold)]),
+        ];
+        let leader = Worker::new();
+
+        let mut worker_group = WorkerGroup::from_workers(leader, workers);
+        let quitters = worker_group.remove_quitters();
+
+        assert_eq!(quitters.len(), 2);
+        assert_eq!(worker_group.workers.len(), 3);
+    }
+
+    #[test]
+    fn remove_quitters_no_quitters() {
+        let workers = vec![
+            Worker::from_state(ActiveState::Active, vec![PassiveState::Angry]), 
+            Worker::from_state(ActiveState::Annoying, vec![PassiveState::Sick(Disease::Cold)]),
+            Worker::from_state(ActiveState::Resting, vec![PassiveState::Sick(Disease::Cold)]),
+        ];
+        let leader = Worker::new();
+
+        let mut worker_group = WorkerGroup::from_workers(leader, workers);
+        let quitters = worker_group.remove_quitters();
+
+        assert_eq!(quitters.len(), 0);
+        assert_eq!(worker_group.workers.len(), 3);
+    }
+
+    #[test]
+    fn remove_quitters_empty_group() {
+        let workers = vec![];
+        let leader = Worker::new();
+
+        let mut worker_group = WorkerGroup::from_workers(leader, workers);
+        let quitters = worker_group.remove_quitters();
+
+        assert_eq!(quitters.len(), 0);
+        assert_eq!(worker_group.workers.len(), 0);
+    }
+
+    #[test]
+    fn remove_quitters_all_quitters() {
+        let workers = vec![
+            Worker::from_state(ActiveState::QuittingGroup, vec![PassiveState::Angry]), 
+            Worker::from_state(ActiveState::QuittingGroup, vec![PassiveState::Sick(Disease::Cold)]),
+            Worker::from_state(ActiveState::QuittingGroup, vec![PassiveState::Sick(Disease::Cold)]),
+        ];
+        let leader = Worker::new();
+
+        let mut worker_group = WorkerGroup::from_workers(leader, workers);
+        let quitters = worker_group.remove_quitters();
+
+        assert_eq!(quitters.len(), 3);
+        assert_eq!(worker_group.workers.len(), 0);
+    }
+}
