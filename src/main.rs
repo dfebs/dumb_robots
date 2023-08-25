@@ -1,3 +1,4 @@
+mod workers;
 use bevy::prelude::*;
 
 fn main() {
