@@ -1,7 +1,7 @@
 use rand::prelude::*;
 use std::sync::{Arc, Mutex};
 
-use bevy::{prelude::Vec2, utils::HashSet};
+use bevy::{prelude::Vec2, utils::{HashSet, HashMap}};
 
 /* Ignore these macros for now, prepping for future threading
  *
@@ -34,6 +34,8 @@ type TileRef = Arc<Mutex<Tile>>;
 
 /* Feel free to add other type, should affect the code.
  */
+
+// 32
 #[derive(Debug, Default, Eq, Hash, PartialEq)]
 pub enum TileType {
     #[default]
@@ -111,6 +113,7 @@ impl TileType {
 pub struct Tile {
     types: HashSet<TileType>,
     location: u64, // I would use Vec2, but I don't want rounding error for hashing reasons
+    pub distance_map: HashMap<u64, usize>,
 }
 
 impl Tile {
@@ -131,7 +134,8 @@ impl Tile {
         }
         types.insert(tile_type);
 
-        Tile { types, location }
+        let distance_map: HashMap<u64, usize> = HashMap::new();
+        Tile { types, location , distance_map}
     }
 
     pub fn get_coords(&self) -> (i32, i32) {

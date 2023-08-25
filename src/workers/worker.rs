@@ -1,5 +1,5 @@
 use bevy::math::Vec2;
-use crate::workers::name_generator::get_random_entry_from_file;
+use super::name_generator::get_random_entry_from_file;
 
 #[derive(Debug)]
 pub enum ActiveState {
