@@ -1,9 +1,4 @@
-#[cfg(test)]
-mod tests;
-
-mod map_gen;
-use crate::map_gen::World;
-
+mod workers;
 use bevy::prelude::*;
 
 fn main() {

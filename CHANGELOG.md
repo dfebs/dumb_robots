@@ -1,8 +1,11 @@
 # Change Log
 
-### 2023-08-12 20:36
+### 2023-08-18
+- Added ability to remove workers that want to leave the group using `remove_quitters`. This will take the quitters out of the group, and return them as a vec
+- Added some unit tests for `remove_quitters`
 
-- Added shell.nix for build configuration because I run on nixos
-- Made intial Tile struct and TileType.
-- Made a bare-bones world generator (just random tiles with probabilities)
-- Added test/tui printing for checking world generation (run Makefile to understand)
+### 2023-08-13
+
+- Created base structs for Worker and WorkerGroup
+- Added tests to illustrate WorkerGroup initialization (cargo test -- --nocapture to see it in action)
+- Added ability to create Worker and WorkerGroup with random names
