@@ -1,5 +1,7 @@
 pub mod world;
 pub mod tile;
+pub mod path_finder;
+pub mod cardinal;
 
 /* I figured that we could use our tests as make shift background
  * monitor until we get a UI running in bevy
