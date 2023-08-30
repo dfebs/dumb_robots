@@ -1,5 +1,5 @@
-use crate::workers::worker::{Worker, ActiveState, PassiveState, Disease}; // This feels a tad goofy; there's probably a better way to organize this
-use crate::workers::name_generator::get_random_entry_from_file;
+use super::worker::{Worker, ActiveState, PassiveState, Disease}; // This feels a tad goofy; there's probably a better way to organize this
+use super::name_generator::get_random_entry_from_file;
 use std::ops;
 
 #[derive(Debug)]
