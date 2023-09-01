@@ -1,5 +1,6 @@
 use bevy::math::Vec2;
 use super::name_generator::get_random_entry_from_file;
+use rand::Rng;
 
 #[derive(Debug)]
 pub enum ActiveState {
@@ -18,6 +19,18 @@ pub enum PassiveState {
     Sick(Disease)
 }
 
+#[derive(Debug)]
+pub enum Trait {
+    Fighter,
+    Hunter,
+    Miner,
+    Engineer,
+    Scout,
+    Healer,
+    Immune, // can't get sick
+    Coordinated, // more likely to be leader
+}
+
 // I like the idea of introducing conflict that goes against the player's desire to make large groups.
 #[derive(Debug)]
 pub enum Disease { 
@@ -31,11 +44,12 @@ pub struct Worker {
     name: String,
     pub active_state: ActiveState,
     passive_states: Vec<PassiveState>,
+    traits: Vec<Trait>,
     pub hp: i32,
     max_hp: i32,
     stamina: i32,
     max_stamina: i32,
-    location: Vec2, // May not be needed based on changes I saw in JBA_brainstorm
+    location: (i32, i32), // May not be needed based on changes I saw in JBA_brainstorm
 
     // My idea with relationships is having a ref to a worker
     // that would map to a numeric relationship value (1-10). 
@@ -57,6 +71,22 @@ impl Worker {
             ..Default::default()
         }
     }
+
+    pub fn from_random() -> Self {
+        let mut rng = rand::thread_rng();
+        let max_hp = rng.gen_range(50..=100);
+        let max_stamina = rng.gen_range(50..=100);
+        // TODO: provide random assortment of traits and passive states. Give one random active state from subset of all active states.
+        Worker {
+            max_hp,
+            max_stamina,
+            hp:max_hp - rng.gen_range(0..=30),
+            stamina: max_stamina - rng.gen_range(0..=30),
+            ..Default::default()
+        }
+    }
+
+
 }
 
 impl Default for Worker {
@@ -65,11 +95,12 @@ impl Default for Worker {
             name: get_random_entry_from_file("src/workers/names/worker_names.txt"),
             active_state: ActiveState::Active,
             passive_states: vec![PassiveState::Happy],
+            traits: vec![Trait::Engineer, Trait::Immune],
             hp: 75,
             max_hp: 100,
             stamina: 75,
             max_stamina: 100,
-            location: Vec2::new(0.0, 0.0) // May not be needed based on changes I saw in JBA_brainstorm
+            location: (0, 0) // May not be needed based on changes I saw in JBA_brainstorm
         }
     }
 }
