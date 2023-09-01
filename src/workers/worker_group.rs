@@ -4,7 +4,7 @@ use std::ops;
 
 #[derive(Debug)]
 pub struct WorkerGroup {
-    workers: Vec<Worker>,
+    pub workers: Vec<Worker>,
     leader: Worker,
     group_name: String
 }
@@ -13,7 +13,7 @@ impl WorkerGroup {
 
     // Used when game starts and groups are being made for the first time
     // TODO have more randomness
-    fn new() -> Self { 
+    pub fn new() -> Self { 
         WorkerGroup { 
             leader: Worker::new(),
             workers: vec![Worker::new(), Worker::new(), Worker::new()],
@@ -21,7 +21,7 @@ impl WorkerGroup {
         }
     }
 
-    fn from_workers(leader: Worker, workers: Vec<Worker>) -> Self {
+    pub fn from_workers(leader: Worker, workers: Vec<Worker>) -> Self {
         WorkerGroup {
             leader,
             workers,
@@ -35,7 +35,7 @@ impl WorkerGroup {
         // If I'm correct, self.workers takes all the workers and leader from other_group, then other_group goes out of scope
     }
 
-    fn remove_quitters(&mut self) -> Vec<Worker> { 
+    pub fn remove_quitters(&mut self) -> Vec<Worker> { 
         let quitter_indices : Vec<usize> = self.workers
                 .iter()
                 .enumerate()
@@ -67,7 +67,6 @@ impl WorkerGroup {
 
 #[cfg(test)]
 mod tests { // TODO: Make tests better and add assertions. Also, probably will want to move these somewhere else at some point
-    use crate::workers::worker;
 
     use super::*;
 
