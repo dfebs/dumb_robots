@@ -35,7 +35,7 @@ pub struct Worker {
     max_hp: i32,
     stamina: i32,
     max_stamina: i32,
-    location: (i32, i32), // May not be needed based on changes I saw in JBA_brainstorm
+    location: (i32, i32),
 
     // My idea with relationships is having a ref to a worker
     // that would map to a numeric relationship value (1-10). 
@@ -69,7 +69,7 @@ impl Default for Worker {
             max_hp: 100,
             stamina: 75,
             max_stamina: 100,
-            location: (0, 0) // May not be needed based on changes I saw in JBA_brainstorm
+            location: (0, 0)
         }
     }
 }
