@@ -19,16 +19,21 @@ pub enum PassiveState {
     Sick(Disease)
 }
 
-#[derive(Debug)]
-pub enum Trait {
+#[derive(Debug, Copy, Clone)]
+pub enum Profession {
     Fighter,
     Hunter,
     Miner,
     Engineer,
     Scout,
-    Healer,
+    Healer
+}
+#[derive(Debug)]
+pub enum Trait {
     Immune, // can't get sick
     Coordinated, // more likely to be leader
+    Fast,  // Doesn't slow down group movement as much
+    
 }
 
 // I like the idea of introducing conflict that goes against the player's desire to make large groups.
@@ -39,11 +44,17 @@ pub enum Disease {
     Hysteria, // More of a memetic threat than a biological one. Worker behavior is far less predictable. Could maybe take Some() value for a hyperfixation on an ActiveState  
 }
 
+fn get_random_profession(num_attributes: i32) -> Profession {
+    let mut rng = rand::thread_rng();
+    let professions = [ Profession::Fighter, Profession::Hunter, Profession::Miner, Profession::Engineer, Profession::Scout, Profession::Healer ];
+    return professions[rng.gen_range(0..professions.len())]
+}
 #[derive(Debug)]
 pub struct Worker {
     name: String,
     pub active_state: ActiveState,
     passive_states: Vec<PassiveState>,
+    profession: Profession,
     traits: Vec<Trait>,
     pub hp: i32,
     max_hp: i32,
@@ -95,7 +106,8 @@ impl Default for Worker {
             name: get_random_entry_from_file("src/workers/names/worker_names.txt"),
             active_state: ActiveState::Active,
             passive_states: vec![PassiveState::Happy],
-            traits: vec![Trait::Engineer, Trait::Immune],
+            profession: Profession::Engineer,
+            traits: vec![Trait::Immune],
             hp: 75,
             max_hp: 100,
             stamina: 75,
@@ -114,7 +126,7 @@ mod tests { // TODO: Make tests better and add assertions. Also, probably will w
 
     #[test]
     fn create_new_worker_group() {
-        let worker_group = WorkerGroup::new();
+        let worker_group = WorkerGroup::new(3);
         println!("{:#?}", worker_group)
     }
 

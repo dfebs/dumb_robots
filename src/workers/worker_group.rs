@@ -1,5 +1,6 @@
 use super::worker::{Worker, ActiveState, PassiveState, Disease}; // This feels a tad goofy; there's probably a better way to organize this
 use super::name_generator::get_random_entry_from_file;
+use rand::prelude::*;
 use std::ops;
 
 #[derive(Debug)]
@@ -13,10 +14,12 @@ impl WorkerGroup {
 
     // Used when game starts and groups are being made for the first time
     // TODO have more randomness
-    pub fn new() -> Self { 
+    pub fn new(max_workers: i32) -> Self {
+        let mut rng = rand::thread_rng();
+        let num_workers = rng.gen_range(1..=max_workers);
         WorkerGroup { 
             leader: Worker::new(),
-            workers: vec![Worker::new(), Worker::new(), Worker::new()],
+            workers: (1..=num_workers).map(|_| Worker::new()).collect(),
             group_name: get_random_entry_from_file("src/workers/names/group_names.txt")
         }
     }
@@ -72,7 +75,7 @@ mod tests { // TODO: Make tests better and add assertions. Also, probably will w
 
     #[test]
     fn create_new_worker_group() {
-        let worker_group = WorkerGroup::new();
+        let worker_group = WorkerGroup::new(3);
         println!("{:#?}", worker_group)
     }
 
